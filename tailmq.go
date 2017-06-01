@@ -19,15 +19,23 @@ func main() {
   var exchangeName string
   var prefix bool
   
+  cli.VersionFlag = cli.BoolFlag{
+    Name: "version",
+    Usage: "print only the version",
+  }
+
   app := cli.NewApp()
   app.Name = "tailmq"
   app.Usage = "Tail a RabbitMQ exchange"
+  app.Version = "0.1.0"
+  app.Compiled = time.Now()
+  app.ArgsUsage = "[exchangeName]"
 
   app.Flags = []cli.Flag {
 
     cli.StringFlag{
       Name: "uri, u",
-      Value: "amqp://guest:guest@localhost:5672/vhost",
+      Value: "amqp://guest:guest@localhost:5672/",
       Usage: "RabbitMQ amqp uri",
       Destination: &uri,
     },
