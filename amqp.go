@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"time"
-	"log"
 
 	"github.com/satori/go.uuid"
 	"github.com/streadway/amqp"
@@ -13,11 +12,11 @@ func openChannel(app App) (*amqp.Connection, *amqp.Channel) {
 	
     app.info("Establishing connection... "+ *app.uri)
     conn, err := amqp.Dial(*app.uri)
-    failOnError(err, "Failed to connect to RabbitMQ")
+    app.failOnError(err, "Failed to connect to RabbitMQ")
     app.info("Connected")
 
     ch, err := conn.Channel()
-    failOnError(err, "Failed to open a channel")
+    app.failOnError(err, "Failed to open a channel")
     app.info("Channel opened")
 
     return conn, ch
@@ -37,7 +36,7 @@ func createExpirableQueue(app App, ch *amqp.Channel) amqp.Queue {
       args,    // arguments
     )
 
-    failOnError(err, "Failed to declare a queue")
+    app.failOnError(err, "Failed to declare a queue")
 
     err = ch.QueueBind(
       q.Name, // name
@@ -46,7 +45,7 @@ func createExpirableQueue(app App, ch *amqp.Channel) amqp.Queue {
       false,   // exclusive
       nil,     // arguments
     )
-    failOnError(err, "Failed to bind topic / fanout queue")
+    app.failOnError(err, "Failed to bind topic / fanout queue")
 
     err = ch.QueueBind(
       q.Name, // name
@@ -55,7 +54,7 @@ func createExpirableQueue(app App, ch *amqp.Channel) amqp.Queue {
       false,   // exclusive
       nil,     // arguments
     )
-    failOnError(err, "Failed to bind direct queue")
+    app.failOnError(err, "Failed to bind direct queue")
 
     app.info("Queue defined")
 
@@ -79,7 +78,7 @@ func tail(app App) {
       false,  // no-wait
       nil,    // args
     )
-    failOnError(err, "Failed to register a consumer")
+    app.failOnError(err, "Failed to register a consumer")
 
     forever := make(chan bool)
 
@@ -98,11 +97,4 @@ func tail(app App) {
 
     app.info(" [*] Waiting for messages. To exit press CTRL+C")
     <-forever
-}
-
-func failOnError(err error, msg string) {
-  if err != nil {
-    log.Fatalf("%s: %s", msg, err)
-    panic(fmt.Sprintf("%s: %s", msg, err))
-  }
 }
