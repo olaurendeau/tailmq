@@ -35,22 +35,26 @@ $ tailmq amq.topic | grep sent
 
 ```bash
 $ tailmq --help
-NAME:
-   tailmq - Tail a RabbitMQ exchange
-
-USAGE:
-   tailmq [global options] command [command options] [exchangeName]
-
-VERSION:
-   0.1.0
-
-COMMANDS:
-     help, h  Shows a list of commands or help for one command
-
-GLOBAL OPTIONS:
-   --uri value, -u value  RabbitMQ amqp uri (default: "amqp://guest:guest@localhost:5672/")
-   --prefix               Should output be prefixed with date and time
-   --verbose              Do you want more informations ?
-   --help, -h             show help
-   --version              print only the version
+DESCRIPTION
+  TailMQ tail AMQP exchanges and output messages in stdout
+USAGE
+  tailmq [options] <exchange_name>
+EXAMPLES
+  tailmq amp.direct - Tail exchange amp.direct on local server with default access
+  tailmq -uri=amqp://user:password@tailmq.com:5672//awesome amp.topic - Tail exchange amp.topic from server tailmq.com in vhost /awesome
+  tailmq -server=prod amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq
+  tailmq -server=prod -vhost=/foobar amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq but use vhost /foobar
+OPTIONS
+  -help
+    	How does it work ?
+  -prefix
+    	Should output be prefixed with datetime and time
+  -server string
+    	Use predefined server from configuration
+  -uri string
+    	RabbitMQ amqp uri (default "amqp://guest:guest@localhost:5672/")
+  -verbose
+    	Do you want more informations ?
+  -vhost string
+    	Define vhost to tail from
 ```
