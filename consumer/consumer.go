@@ -39,25 +39,12 @@ func (c *Consumer) Stop() {
 
 func (c *Consumer) openChannel() (*amqp.Connection, *amqp.Channel, error) {
 	
-	var conn *amqp.Connection
-	var ch *amqp.Channel
-	var err error
-
     log.Printf("Establishing connection... "+ c.uri)
-    conn, err = amqp.Dial(c.uri)
+    conn, err := amqp.Dial(c.uri)
     log.Printf("Connected")
 
-    if err != nil {
-	    log.Printf("Fail connecting")
-
-    	return conn, ch, err
-    }
-
-    ch, err = conn.Channel()
+    ch, err := conn.Channel()
     log.Printf("Channel opened")
-    if err != nil {
-	    log.Printf("Fail opening channel")
-    }
 
     return conn, ch, err
 }
@@ -76,11 +63,6 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       args,    // arguments
     )
 
-    if err != nil {
-	    log.Printf("Fail declaring queue")
-    	return q, err
-    }
-
     err = ch.QueueBind(
       q.Name, // name
       "#",   // routing key
@@ -89,11 +71,6 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       nil,     // arguments
     )
 
-    if err != nil {
-	    log.Printf("Fail binding queue")
-		return q, err
-    }
-
     err = ch.QueueBind(
       q.Name, // name
       "",   // routing key
@@ -101,11 +78,6 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       false,   // exclusive
       nil,     // arguments
     )
-
-    if err != nil {
-	    log.Printf("Fail binding queue")
-		return q, err
-    }
 
     log.Printf("Queue defined")
 
