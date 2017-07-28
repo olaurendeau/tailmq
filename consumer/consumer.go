@@ -1,31 +1,31 @@
 package consumer
 
 import (
-	"log"
-	"github.com/satori/go.uuid"
-	"github.com/streadway/amqp"
+    "log"
+    "github.com/satori/go.uuid"
+    "github.com/streadway/amqp"
 )
 
 type Consumer struct {
-	uri string
-	exchangeName string
-	conn *amqp.Connection
-	ch *amqp.Channel
-	Deliveries <-chan amqp.Delivery
+    uri string
+    exchangeName string
+    conn *amqp.Connection
+    ch *amqp.Channel
+    Deliveries <-chan amqp.Delivery
 }
 
 func New(uri string, exchangeName string) *Consumer {
-	c := &Consumer{}
-	c.uri = uri
-	c.exchangeName = exchangeName
+    c := &Consumer{}
+    c.uri = uri
+    c.exchangeName = exchangeName
 
-	return c
+    return c
 }
 
 func (c *Consumer) Start() (err error) {
-	c.conn, c.ch, err = c.openChannel()
+    c.conn, c.ch, err = c.openChannel()
 
-	q, err := c.createExpirableQueue(c.ch)
+    q, err := c.createExpirableQueue(c.ch)
 
     c.Deliveries, err = c.ch.Consume(q.Name, "", true, false, false, false, nil)
 
@@ -38,7 +38,7 @@ func (c *Consumer) Stop() {
 }
 
 func (c *Consumer) openChannel() (*amqp.Connection, *amqp.Channel, error) {
-	
+    
     log.Printf("Establishing connection... "+ c.uri)
     conn, err := amqp.Dial(c.uri)
     log.Printf("Connected")
