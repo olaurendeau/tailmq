@@ -3,6 +3,22 @@ Tail messages from a RabbitMQ exchange into your CLI console
 
 # Installation
 
+## Linux
+
+```bash
+curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-linux-amd64
+mv tailmq-linux-amd64 /usr/local/bin/tailmq
+rm tailmq-linux-amd64
+```
+
+## MacOS
+
+```bash
+curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-darwin-amd64
+sudo mv tailmq-darwin-amd64 /usr/local/bin/tailmq
+rm tailmq-darwin-amd64
+```
+
 # Usage examples
 
 Dump messages from an exchange to your console
@@ -57,4 +73,23 @@ OPTIONS
     	Do you want more informations ?
   -vhost string
     	Define vhost to tail from
+```
+
+# Config file
+
+## Format
+
+```yaml
+servers:
+    server_name: amqp_uri    
+```
+
+## Sample
+
+```yaml
+servers:
+    local: amqp://localhost:5672/
+    staging: amqp://staging.tailmq.io:5672/
+    staging_the_vhost: amqp://staging.tailmq.io:5672/the_vhost
+    prod: amqp://tailmq.io:5672/
 ```

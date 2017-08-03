@@ -1,46 +1,47 @@
 package main
 
 import (
-  "fmt"
-  "errors"
   "io/ioutil"
-  "encoding/json"
-
+  "errors"
+  
   "github.com/mitchellh/go-homedir"
+  "gopkg.in/yaml.v2"
 )
 
-type AmqpConfig struct {
-    Name string`json:"name"`
-    Uri string `json:"uri"`
+type GlobalConfig struct {
+  Servers map[string]string
 }
 
-func getAmqpConfigList() []AmqpConfig {
-  homedir, err := homedir.Dir()
-  if err != nil {
-      fmt.Print(err)
-  }
+func getServerList(path string) (GlobalConfig, error) {
 
-  fileContent, err := ioutil.ReadFile(homedir + "/.tailmq")
-  
-  if err != nil {
-      fmt.Print(err)
-  }
+  var globalConfig GlobalConfig
 
-  var configList []AmqpConfig
-  json.Unmarshal(fileContent, &configList)
-
-  return configList
-}
-
-func getConfig(name string, configList []AmqpConfig) (AmqpConfig, error) {
-
-  var config AmqpConfig
-
-  for _, config := range configList {
-    if (config.Name == name) {
-      return config, nil
+  if path == "" {
+    homedir, err := homedir.Dir()
+    if err != nil {
+      return globalConfig, err
     }
+
+    path = homedir + "/.tailmq"
   }
 
-  return config, errors.New("No config named " + name)
+  fileContent, err := ioutil.ReadFile(path)
+
+  if err != nil {
+    return globalConfig, err
+  }
+  
+  err = yaml.Unmarshal(fileContent, &globalConfig)
+
+  return globalConfig, err
+}
+
+func getServerUri(server string, globalConfig GlobalConfig) (string, error) {
+  var err error
+  uri := globalConfig.Servers[server]
+  if uri == "" {
+    err = errors.New("No server named " + server)
+  }
+
+  return uri, err
 }
