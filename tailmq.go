@@ -9,7 +9,6 @@ import (
   "net/url"
   "strings"
   "time"
-  "context"
 
   "github.com/olaurendeau/tailmq/consumer"
   "github.com/streadway/amqp"
@@ -41,8 +40,6 @@ type Config struct {
 
 func main() {
   var err error
-
-  ctx := context.Background()
 
   config := new(Config)
 
@@ -80,8 +77,6 @@ func main() {
         printDelivery(d, config)
       case err := <-c.Err:
         failOnError(err, "Fail consuming")
-      case <-ctx.Done():
-        return
     }
   }
 }
