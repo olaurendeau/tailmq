@@ -26,6 +26,7 @@ func New(uri string, exchangeName string) *Consumer {
 
 func (c *Consumer) Start() () {
     var err error
+
     c.conn, c.ch = c.openChannel()
 
     q := c.createExpirableQueue(c.ch)
@@ -40,7 +41,6 @@ func (c *Consumer) Stop() {
 }
 
 func (c *Consumer) openChannel() (*amqp.Connection, *amqp.Channel) {
-    
     log.Printf("Establishing connection... "+ c.uri)
     conn, err := amqp.Dial(c.uri)
     c.Err <- err
@@ -58,35 +58,15 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue) {
     args = make(amqp.Table)
     args["x-expires"] = int32(10000)
 
-    q, err := ch.QueueDeclare(
-      "tailmq_"+uuid.NewV4().String(), // name
-      false,   // durable
-      true,    // delete when unused
-      false,   // exclusive
-      false,   // no-wait
-      args,    // arguments
-    )
+    q, err := ch.QueueDeclare("tailmq_"+uuid.NewV4().String(), false, true, false, false, args)
     c.Err <- err
-
-    err = ch.QueueBind(
-      q.Name, // name
-      "#",   // routing key
-      c.exchangeName,   // exchange name
-      false,   // exclusive
-      nil,     // arguments
-    )
-    c.Err <- err
-
-    err = ch.QueueBind(
-      q.Name, // name
-      "",   // routing key
-      c.exchangeName,   // exchange name
-      false,   // exclusive
-      nil,     // arguments
-    )
-    c.Err <- err
-
     log.Printf("Queue defined")
+
+    err = ch.QueueBind(q.Name, "#", c.exchangeName, false, nil)
+    c.Err <- err
+    err = ch.QueueBind(q.Name, "", c.exchangeName, false, nil)
+    c.Err <- err
+    log.Printf("Queue " + q.Name + " binded to exchange "+c.exchangeName)
 
     return q
 }
