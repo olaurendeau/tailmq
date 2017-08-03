@@ -61,6 +61,8 @@ EXAMPLES
   tailmq -server=prod amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq
   tailmq -server=prod -vhost=/foobar amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq but use vhost /foobar
 OPTIONS
+  -config string
+    	Path of the global config file to use
   -help
     	How does it work ?
   -prefix
@@ -79,6 +81,7 @@ OPTIONS
 
 ## Format
 
+`~/.tailmq`
 ```yaml
 servers:
     server_name: amqp_uri    
@@ -86,6 +89,7 @@ servers:
 
 ## Sample
 
+`~/.tailmq`
 ```yaml
 servers:
     local: amqp://localhost:5672/
