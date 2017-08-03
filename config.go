@@ -3,8 +3,8 @@ package main
 import (
   "io/ioutil"
   "errors"
+  "os/user"
   
-  "github.com/mitchellh/go-homedir"
   "gopkg.in/yaml.v2"
 )
 
@@ -17,12 +17,12 @@ func getServerList(path string) (GlobalConfig, error) {
   var globalConfig GlobalConfig
 
   if path == "" {
-    homedir, err := homedir.Dir()
+    usr, err := user.Current()
     if err != nil {
       return globalConfig, err
     }
 
-    path = homedir + "/.tailmq"
+    path = usr.HomeDir + "/.tailmq"
   }
 
   fileContent, err := ioutil.ReadFile(path)
