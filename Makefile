@@ -1,10 +1,10 @@
-build: gopath gobin install
+build: build-darwin-amd64 build-linux-amd64
 
 install: 
 	go install
 
-gopath: 
-	export GOPATH="$(PWD)"
+build-darwin-amd64:
+	GOOS=darwin GOARCH=amd64 go build -o build/tailmq-darwin-amd64
 
-gobin: 
-	export GOBIN="$(PWD)/bin"
+build-linux-amd64:
+	GOOS=linux GOARCH=amd64 go build -o build/tailmq-linux-amd64
