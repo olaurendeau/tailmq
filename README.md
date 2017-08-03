@@ -22,6 +22,7 @@ rm tailmq-darwin-amd64
 # Usage examples
 
 Dump messages from an exchange to your console
+
 ```bash
 $ tailmq amq.topic
 {"id":"592fec584a25f","request_id":"592fd015bba42","channel":null,"message":"[10:28:40] 592fd015bba42 [worker] Invoice sent by email\n"}
@@ -32,6 +33,7 @@ $ tailmq amq.topic
 ```
 
 Retrieve a specific value from messages
+
 ```bash
 $ tailmq amq.topic | jq '.message'
 "[10:29:13] 592fd0166f482 [worker] Invoice sent by email\n"
@@ -41,6 +43,7 @@ $ tailmq amq.topic | jq '.message'
 ```
 
 Look for specific messages
+
 ```bash
 $ tailmq amq.topic | grep sent
 {"id":"592fec63717ac","request_id":"592fd015f36f8","channel":null,"message":"[10:28:51] 592fd015f36f8 [worker] Invoice sent by email\n"}
