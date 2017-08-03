@@ -12,7 +12,7 @@ type GlobalConfig struct {
   Servers map[string]string
 }
 
-func getServerList(path string) (GlobalConfig, error) {
+func NewGlobalConfig(path string) (GlobalConfig, error) {
 
   var globalConfig GlobalConfig
 
@@ -36,9 +36,9 @@ func getServerList(path string) (GlobalConfig, error) {
   return globalConfig, err
 }
 
-func getServerUri(server string, globalConfig GlobalConfig) (string, error) {
+func (g GlobalConfig) getServerUri(server string) (string, error) {
   var err error
-  uri := globalConfig.Servers[server]
+  uri := g.Servers[server]
   if uri == "" {
     err = errors.New("No server named " + server)
   }

@@ -55,7 +55,7 @@ func main() {
   config.globalConfigFilePath = flag.String("config", "", "Path of the global config file to use")
   flag.Parse()
 
-  config.global, err = getServerList(*config.globalConfigFilePath)
+  config.global, err = NewGlobalConfig(*config.globalConfigFilePath)
   failOnError(err, "Fail retrieving server list")
 
   configureLogger(config)
@@ -105,7 +105,7 @@ func configureLogger(config *Config) {
 
 func setUri(config *Config) {
   if (*config.server != "") {
-    server, err := getServerUri(*config.server, config.global)
+    server, err := config.global.getServerUri(*config.server)
     failOnError(err, "Failed to find server configuration")
 
     *config.uri = server
