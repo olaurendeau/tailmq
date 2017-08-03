@@ -26,12 +26,11 @@ func New(uri string, exchangeName string) *Consumer {
 
 func (c *Consumer) Start() () {
     var err error
-    c.conn, c.ch, err = c.openChannel()
+    c.conn, c.ch = c.openChannel()
 
-    q, err := c.createExpirableQueue(c.ch)
+    q := c.createExpirableQueue(c.ch)
 
     c.Deliveries, err = c.ch.Consume(q.Name, "", true, false, false, false, nil)
-
     c.Err <- err
 }
 
@@ -40,19 +39,21 @@ func (c *Consumer) Stop() {
     c.ch.Close()
 }
 
-func (c *Consumer) openChannel() (*amqp.Connection, *amqp.Channel, error) {
+func (c *Consumer) openChannel() (*amqp.Connection, *amqp.Channel) {
     
     log.Printf("Establishing connection... "+ c.uri)
     conn, err := amqp.Dial(c.uri)
+    c.Err <- err
     log.Printf("Connected")
 
     ch, err := conn.Channel()
+    c.Err <- err
     log.Printf("Channel opened")
 
-    return conn, ch, err
+    return conn, ch
 }
 
-func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
+func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue) {
     var args amqp.Table
     args = make(amqp.Table)
     args["x-expires"] = int32(10000)
@@ -65,6 +66,7 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       false,   // no-wait
       args,    // arguments
     )
+    c.Err <- err
 
     err = ch.QueueBind(
       q.Name, // name
@@ -73,6 +75,7 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       false,   // exclusive
       nil,     // arguments
     )
+    c.Err <- err
 
     err = ch.QueueBind(
       q.Name, // name
@@ -81,8 +84,9 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue, error) {
       false,   // exclusive
       nil,     // arguments
     )
+    c.Err <- err
 
     log.Printf("Queue defined")
 
-    return q, err
+    return q
 }
