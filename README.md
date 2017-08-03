@@ -3,6 +3,22 @@ Tail messages from a RabbitMQ exchange into your CLI console
 
 # Installation
 
+## Linux
+
+```bash
+curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-linux-amd64
+mv tailmq-linux-amd64 /usr/local/bin/tailmq
+rm tailmq-linux-amd64
+```
+
+## MacOS
+
+```bash
+curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-darwin-amd64
+sudo mv tailmq-darwin-amd64 /usr/local/bin/tailmq
+rm tailmq-darwin-amd64
+```
+
 # Usage examples
 
 Dump messages from an exchange to your console
@@ -35,22 +51,45 @@ $ tailmq amq.topic | grep sent
 
 ```bash
 $ tailmq --help
-NAME:
-   tailmq - Tail a RabbitMQ exchange
+DESCRIPTION
+  TailMQ tail AMQP exchanges and output messages in stdout
+USAGE
+  tailmq [options] <exchange_name>
+EXAMPLES
+  tailmq amp.direct - Tail exchange amp.direct on local server with default access
+  tailmq -uri=amqp://user:password@tailmq.com:5672//awesome amp.topic - Tail exchange amp.topic from server tailmq.com in vhost /awesome
+  tailmq -server=prod amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq
+  tailmq -server=prod -vhost=/foobar amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq but use vhost /foobar
+OPTIONS
+  -help
+    	How does it work ?
+  -prefix
+    	Should output be prefixed with datetime and time
+  -server string
+    	Use predefined server from configuration
+  -uri string
+    	RabbitMQ amqp uri (default "amqp://guest:guest@localhost:5672/")
+  -verbose
+    	Do you want more informations ?
+  -vhost string
+    	Define vhost to tail from
+```
 
-USAGE:
-   tailmq [global options] command [command options] [exchangeName]
+# Config file
 
-VERSION:
-   0.1.0
+## Format
 
-COMMANDS:
-     help, h  Shows a list of commands or help for one command
+```yaml
+servers:
+    server_name: amqp_uri    
+```
 
-GLOBAL OPTIONS:
-   --uri value, -u value  RabbitMQ amqp uri (default: "amqp://guest:guest@localhost:5672/")
-   --prefix               Should output be prefixed with date and time
-   --verbose              Do you want more informations ?
-   --help, -h             show help
-   --version              print only the version
+## Sample
+
+```yaml
+servers:
+    local: amqp://localhost:5672/
+    staging: amqp://staging.tailmq.io:5672/
+    staging_the_vhost: amqp://staging.tailmq.io:5672/the_vhost
+    prod: amqp://tailmq.io:5672/
 ```
