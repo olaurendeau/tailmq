@@ -28,7 +28,8 @@ $ tailmq amq.topic
 {"id":"592fec584b798","request_id":"592fd015bba42","channel":null,"message":"[10:28:40] 592fd015bba42 [worker] Message processed\n"}
 {"id":"592fec584cd07","request_id":"592fd015cad15","channel":null,"message":"[10:28:40] 592fd015cad15 [worker] Generating invoice\n"}
 {"id":"592fec5901213","request_id":"592fd015c9bc8","channel":null,"message":"[10:28:41] 592fd015c9bc8 [worker] Invoice sent by email\n"}
-{"id":"592fec59023a7","request_id":"592fd015c9bc8","channel":null,"message":"[10:28:41] 592fd015c9bc8 [worker] Message processed\n"}```
+{"id":"592fec59023a7","request_id":"592fd015c9bc8","channel":null,"message":"[10:28:41] 592fd015c9bc8 [worker] Message processed\n"}
+```
 
 Retrieve a specific value from messages
 ```bash
