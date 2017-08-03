@@ -12,24 +12,27 @@ type Consumer struct {
     conn *amqp.Connection
     ch *amqp.Channel
     Deliveries <-chan amqp.Delivery
+    Err chan error
 }
 
 func New(uri string, exchangeName string) *Consumer {
     c := &Consumer{}
     c.uri = uri
     c.exchangeName = exchangeName
+    c.Err = make(chan error)
 
     return c
 }
 
-func (c *Consumer) Start() (err error) {
+func (c *Consumer) Start() () {
+    var err error
     c.conn, c.ch, err = c.openChannel()
 
     q, err := c.createExpirableQueue(c.ch)
 
     c.Deliveries, err = c.ch.Consume(q.Name, "", true, false, false, false, nil)
 
-    return err
+    c.Err <- err
 }
 
 func (c *Consumer) Stop() {
