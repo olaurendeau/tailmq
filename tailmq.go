@@ -9,6 +9,7 @@ import (
     "net/url"
     "strings"
     "time"
+    "context"
 
     "github.com/olaurendeau/tailmq/consumer"
     "github.com/streadway/amqp"
@@ -39,6 +40,8 @@ type Config struct {
 
 func main() {
 
+    ctx := context.Background()
+
     config := new(Config)
 
     config.uri = flag.String("uri", "amqp://guest:guest@localhost:5672/", "RabbitMQ amqp uri")
@@ -65,7 +68,6 @@ func main() {
     c := consumer.New(*config.uri, config.exchangeName)
     go c.Start()
     defer c.Stop()
-    log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 
     for {
         select {
@@ -73,8 +75,8 @@ func main() {
                 printDelivery(d, config)
             case err := <-c.Err:
                 failOnError(err, "Fail consuming")
-            /*case <-ctx.Done():
-                return*/
+            case <-ctx.Done():
+                return
       }
     }
 }
