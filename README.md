@@ -6,17 +6,15 @@ Tail messages from a RabbitMQ exchange into your CLI console
 ## Linux
 
 ```bash
-curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-linux-amd64
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-linux-amd64
 mv tailmq-linux-amd64 /usr/local/bin/tailmq
-rm tailmq-linux-amd64
 ```
 
 ## MacOS
 
 ```bash
-curl -O https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-darwin-amd64
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.0.0/tailmq-darwin-amd64
 sudo mv tailmq-darwin-amd64 /usr/local/bin/tailmq
-rm tailmq-darwin-amd64
 ```
 
 # Usage examples
