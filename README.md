@@ -15,6 +15,12 @@ curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tai
 curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
+# ⚠️Known issues
+
+## Memory leak
+
+There is a slow growin memory leak, while the program is launch it's slowly consuming more and more memory until you kill it
+
 # Usage examples
 
 Dump messages from an exchange to your console
