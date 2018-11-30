@@ -15,7 +15,7 @@ curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tai
 curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
-# ⚠️Known issues
+# ⚠️ Known issues
 
 ## Memory leak
 
