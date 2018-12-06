@@ -6,13 +6,13 @@ Tail messages from a RabbitMQ exchange into your CLI console
 ## Linux
 
 ```bash
-curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tailmq-linux-amd64 && mv tailmq-linux-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.0/tailmq-linux-amd64 && mv tailmq-linux-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
 ## MacOS
 
 ```bash
-curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.1.0/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.0/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
 # ⚠️ Known issues
@@ -63,24 +63,27 @@ USAGE
   tailmq [options] <exchange_name>
 EXAMPLES
   tailmq amp.direct - Tail exchange amp.direct on local server with default access
+  tailmq amp.topic flower.# - Tail exchange amp.topic based on routing_key flower.#, will catch messages flower.tulip, flower.rose but not tool.chain
   tailmq -uri=amqp://user:password@tailmq.com:5672//awesome amp.topic - Tail exchange amp.topic from server tailmq.com in vhost /awesome
   tailmq -server=prod amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq
   tailmq -server=prod -vhost=/foobar amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq but use vhost /foobar
 OPTIONS
   -config string
-    	Path of the global config file to use
+      Path of the global config file to use
+  -header
+      Should output display headers
   -help
-    	How does it work ?
+      How does it work ?
   -prefix
-    	Should output be prefixed with datetime and time
+      Should output be prefixed with datetime and time
   -server string
-    	Use predefined server from configuration
+      Use predefined server from configuration
   -uri string
-    	RabbitMQ amqp uri (default "amqp://guest:guest@localhost:5672/")
+      RabbitMQ amqp uri (default "amqp://guest:guest@localhost:5672/")
   -verbose
-    	Do you want more informations ?
+      Do you want more informations ?
   -vhost string
-    	Define vhost to tail from
+      Define vhost to tail from
 ```
 
 # Config file
