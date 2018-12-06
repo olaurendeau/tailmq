@@ -17,9 +17,10 @@ import (
 const Help = `DESCRIPTION
   TailMQ tail AMQP exchanges and output messages in stdout
 USAGE
-  tailmq [options] <exchange_name>
+  tailmq [options] <exchange_name> (<routing_key>)
 EXAMPLES
   tailmq amp.direct - Tail exchange amp.direct on local server with default access
+  tailmq amp.topic flower.# - Tail exchange amp.topic based on routing_key flower.#, will catch messages flower.tulip, flower.rose but not tool.chain
   tailmq -uri=amqp://user:password@tailmq.com:5672//awesome amp.topic - Tail exchange amp.topic from server tailmq.com in vhost /awesome
   tailmq -server=prod amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq
   tailmq -server=prod -vhost=/foobar amp.fanout - Tail exchange amp.fanout from server prod configured in file ~/.tailmq but use vhost /foobar
@@ -35,6 +36,7 @@ type Config struct {
   header *bool
   help *bool
   exchangeName string
+  routingKey string
   globalConfigFilePath *string
   global GlobalConfig
 }
@@ -61,15 +63,18 @@ func main() {
   displayHelp(config)
   setUri(config)
   
-  if (flag.NArg() == 0) {
+  if flag.NArg() == 0 {
     log.Fatalf("Please choose an exchange to listen from")
-  } else if (flag.NArg() == 1) {
+  } else if flag.NArg() == 1 {
     config.exchangeName = flag.Arg(0)
+  } else if flag.NArg() == 2 {
+    config.exchangeName = flag.Arg(0)
+    config.routingKey = flag.Arg(1)
   } else {
     log.Fatalf("Not yet available")
   }
 
-  c := consumer.New(*config.uri, config.exchangeName)
+  c := consumer.New(*config.uri, config.exchangeName, config.routingKey)
   go c.Start()
   defer c.Stop()
 

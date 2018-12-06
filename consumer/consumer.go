@@ -9,16 +9,18 @@ import (
 type Consumer struct {
   uri string
   exchangeName string
+  routingKey string
   conn *amqp.Connection
   ch *amqp.Channel
   Deliveries <-chan amqp.Delivery
   Err chan error
 }
 
-func New(uri string, exchangeName string) *Consumer {
+func New(uri string, exchangeName string, routingKey string) *Consumer {
   c := &Consumer{}
   c.uri = uri
   c.exchangeName = exchangeName
+  c.routingKey = routingKey
   c.Err = make(chan error)
 
   return c
@@ -61,12 +63,18 @@ func (c *Consumer) createExpirableQueue(ch *amqp.Channel) (amqp.Queue) {
   q, err := ch.QueueDeclare("tailmq_"+uuid.NewV4().String(), false, true, false, false, args)
   c.Err <- err
   log.Printf("Queue defined")
-
-  err = ch.QueueBind(q.Name, "#", c.exchangeName, false, nil)
-  c.Err <- err
-  err = ch.QueueBind(q.Name, "", c.exchangeName, false, nil)
-  c.Err <- err
-  log.Printf("Queue " + q.Name + " binded to exchange "+c.exchangeName)
+  
+  if c.routingKey != "" {
+    err = ch.QueueBind(q.Name, c.routingKey, c.exchangeName, false, nil)
+    c.Err <- err
+    log.Printf("Queue " + q.Name + " binded to exchange "+ c.exchangeName + " on routing key " + c.routingKey)
+  } else {
+    err = ch.QueueBind(q.Name, "#", c.exchangeName, false, nil)
+    c.Err <- err
+    err = ch.QueueBind(q.Name, "", c.exchangeName, false, nil)
+    c.Err <- err
+    log.Printf("Queue " + q.Name + " binded to exchange "+ c.exchangeName)
+  }
 
   return q
 }
