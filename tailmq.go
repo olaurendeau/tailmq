@@ -12,6 +12,7 @@ import (
 
   "github.com/olaurendeau/tailmq/consumer"
   "github.com/streadway/amqp"
+  "github.com/logrusorgru/aurora"
 )
 
 const Help = `DESCRIPTION
@@ -38,6 +39,7 @@ type Config struct {
   exchangeName string
   routingKey string
   globalConfigFilePath *string
+  noColors *bool
   global GlobalConfig
 }
 
@@ -54,6 +56,7 @@ func main() {
   config.verbose = flag.Bool("verbose", false, "Do you want more informations ?")
   config.help = flag.Bool("help", false, "How does it work ?")
   config.globalConfigFilePath = flag.String("config", "", "Path of the global config file to use")
+  config.noColors = flag.Bool("no-colors", false, "If you don't want a colorful life :'(")
   flag.Parse()
 
   config.global, err = NewGlobalConfig(*config.globalConfigFilePath)
@@ -89,17 +92,19 @@ func main() {
 }
 
 func printDelivery(d amqp.Delivery, config *Config) {
+
+  au := aurora.NewAurora(!*config.noColors)
+
   if *config.prefix {
-    fmt.Printf("[%s]", time.Now().Format("2006-01-02 15:04:05"))
+    fmt.Printf("%s", au.Green(fmt.Sprintf("[%s]", time.Now().Format("2006-01-02 15:04:05"))))
     if d.RoutingKey != "" {
-      fmt.Printf(" %s ", d.RoutingKey)
+      fmt.Printf(" %s ", au.Green(d.RoutingKey))
     }
-    fmt.Printf(" ")
+    fmt.Printf("\n")
   }
   if *config.header {
-    fmt.Printf("\n")
     for k,v := range(d.Headers) {
-      fmt.Printf("Header : %s=%s\n", k, v)
+      fmt.Printf("%s", au.Cyan(fmt.Sprintf("Header : %s=%s\n", k, v)))
     }
   }
   fmt.Printf("%s\n", d.Body)

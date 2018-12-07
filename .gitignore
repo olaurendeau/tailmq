@@ -17,3 +17,6 @@ bin/
 src/
 pkg/
 build/
+vendor/
+
+tailmq
