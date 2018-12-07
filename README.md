@@ -6,13 +6,13 @@ Tail messages from a RabbitMQ exchange into your CLI console
 ## Linux
 
 ```bash
-curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.0/tailmq-linux-amd64 && mv tailmq-linux-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.1/tailmq-linux-amd64 && mv tailmq-linux-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
 ## MacOS
 
 ```bash
-curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.0/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
+curl -O -J -L https://github.com/olaurendeau/tailmq/releases/download/v1.2.1/tailmq-darwin-amd64 && mv tailmq-darwin-amd64 /usr/local/bin/tailmq && chmod +x /usr/local/bin/tailmq
 ```
 
 # ⚠️ Known issues
@@ -74,6 +74,8 @@ OPTIONS
       Should output display headers
   -help
       How does it work ?
+  -no-colors
+      If you don't want a colorful life :'(
   -prefix
       Should output be prefixed with datetime and time
   -server string
